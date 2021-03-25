@@ -1,0 +1,16 @@
+import RPi.GPIO as IO
+import time
+
+led = 21
+IO.setmode(IO.BCM)
+IO.setup(led,IO.OUT)
+IO.setup(20,IO.IN)
+
+while(1):
+    if(IO.input(20)==True):
+        IO.output(21,True)
+        print("1")
+        time.sleep(1)
+    else:
+        IO.output(21,False)
+        time.sleep(1)
