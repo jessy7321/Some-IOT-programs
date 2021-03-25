@@ -1,0 +1,50 @@
+import RPi.GPIO as GPIO
+import time
+from appJar import gui
+
+#handling the event
+def recognize(btn):
+    while(True):
+        while(GPIO.input(20)==0):
+            start = time.time()
+            if(time.time() > w+5):
+                break
+        #if recognized
+        while(GPIO.input(20)==1):
+            stop = time.time()
+            diff = start-stop
+            dis = -34300*diff
+            print(dis)
+            if dis < 10:
+                print("Person is close enough. Opening password window...")
+                app.go()
+                pwd = app.getEntry("Password")
+                if(pwd == "python"):
+                    print("Accepted. Login successful")
+                else:
+                    print("Invalid credentials. Login failed")
+            else:
+                print("Person is too far")
+                app.stop()
+        
+#setting up
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(21,GPIO.OUT)
+GPIO.setup(20,GPIO.IN)
+
+#creating a GUI variable called app
+app = gui("Password alert","400x400")
+app.setBg("thistle")
+app.setFont(18)
+
+#adding and configuring the widgets
+app.addLabel("title","Person recognized, Enter PASSWORD")
+app.setLabelBg("title","orchid")
+app.setLabelFg("title","lavenderblush")
+
+app. addLabelSecretEntry("Password")
+
+#link the buttons to recognize()
+app.addButtons(["Submit","Cancel"],recognize)
+
+app.setFocus("Password")
